@@ -48,7 +48,19 @@ public sealed class MyValidation : Attribute, IActionFilter
 
         if (res.Any())
         {
-            throw new ValidationException(res.SelectMany(s => s.Errors).Distinct().ToList());
+            var errors = res.SelectMany(s => s.Errors).Distinct().ToList();
+
+            context.Result = new ObjectResult(new
+            {
+                Success = false,
+                Message = "Validation errors occurred",
+                Errors = errors.Select(e => e.ErrorMessage).ToList()
+            })
+            {
+                StatusCode = 403
+            };
+
+            return;
         }
     }
 }

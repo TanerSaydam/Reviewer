@@ -94,25 +94,7 @@ public static class Extensions
         return builder;
     }
 
-    public static IRuleBuilder<TEntity, string> WithMessage<TEntity>(this IRuleBuilder<TEntity, string> builder, string message)
-    {
-        var lastIndex = builder._results.Count - 1;
-        var lastRule = builder._results[lastIndex];
-
-        builder._results[lastIndex] = instance =>
-        {
-            var failure = lastRule(instance);
-            if (failure is not null)
-            {
-                return new ValidationFailure(failure.PropertyName, failure.ErrorCode, message);
-            }
-            return null;
-        };
-
-        return builder;
-    }
-
-    public static IRuleBuilder<TEntity, decimal> WithMessage<TEntity>(this IRuleBuilder<TEntity, decimal> builder, string message)
+    public static IRuleBuilder<TEntity, TProperty> WithMessage<TEntity, TProperty>(this IRuleBuilder<TEntity, TProperty> builder, string message)
     {
         var lastIndex = builder._results.Count - 1;
         var lastRule = builder._results[lastIndex];
